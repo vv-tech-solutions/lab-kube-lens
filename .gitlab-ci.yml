@@ -1,0 +1,21 @@
+build_image:
+  stage: build
+  image: quay.io/buildah/stable:latest
+  variables:
+    REGISTRY_URL: "oci.vvtechsolutions.eu"
+    IMAGE_NAME: "kube-lens"
+    # Buildah a besoin de l'isolation 'chroot' s'il n'est pas en mode privilégié
+    BUILDAH_ISOLATION: chroot
+  before_script:
+    - buildah login -u "$REGISTRY_USER" -p "$REGISTRY_PASSWORD" "$REGISTRY_URL"
+  script:
+    - buildah build \
+        --format docker \
+        --platform linux/amd64,linux/arm64 \
+        --tag "$REGISTRY_URL/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA" \
+        --tag "$REGISTRY_URL/$IMAGE_NAME:latest" \
+        .
+    - buildah push "$REGISTRY_URL/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA"
+    - buildah push "$REGISTRY_URL/$IMAGE_NAME:latest"
+  only:
+    - main

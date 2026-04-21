@@ -1,0 +1,66 @@
+[
+    {
+        "title": "Node.js Heap Out of Memory",
+        "content": "Context: Node.js V8 engine memory limit reached. Symptoms: 'Allocation failed - JavaScript heap out of memory'. Action: Increase --max-old-space-size in Docker entrypoint. Check for memory leaks in global variables or unclosed EventEmitters.",
+        "runtime": "node"
+    },
+    {
+        "title": "Node.js Event Loop Blocked",
+        "content": "Context: Synchronous code blocking the event loop. Symptoms: High latency, 504 Gateway Timeouts, heartbeat failures. Action: Profile with 'clinic.js'. Refactor synchronous FS or Crypto calls to their async versions.",
+        "runtime": "node"
+    },
+
+    {
+        "title": "Java JVM Metaspace OOM",
+        "content": "Context: JVM Metaspace exhaustion (class metadata). Symptoms: java.lang.OutOfMemoryError: Metaspace. Action: Increase -XX:MaxMetaspaceSize. Check for dynamic class loading leaks (common in old Spring/Hibernate versions).",
+        "runtime": "java"
+    },
+    {
+        "title": "Java GC Overhead Limit Exceeded",
+        "content": "Context: JVM spending too much time in Garbage Collection. Symptoms: CPU spikes and minimal progress. Action: Increase Heap size (-Xmx). If persistence continues, analyze heap dump for memory leaks or object churn.",
+        "runtime": "java"
+    },
+
+    {
+        "title": "Python SIGKILL (OOM)",
+        "content": "Context: Python process killed by OS due to memory pressure. Symptoms: Silent exit with code 137. Action: Check Pandas/NumPy large dataset handling. Use generators or 'del' variables to free memory early.",
+        "runtime": "python"
+    },
+    {
+        "title": "Python GIL Contention",
+        "content": "Context: CPU-bound tasks blocked by Global Interpreter Lock. Symptoms: High CPU but slow performance in multithreaded apps. Action: Use 'multiprocessing' module instead of 'threading' for CPU-heavy tasks.",
+        "runtime": "python"
+    },
+
+    {
+        "title": "K8s CrashLoopBackOff - Config",
+        "content": "Context: Application fails at startup. Action: Check 'kubectl logs' and 'kubectl describe pod'. Common causes: Missing Environment Variables, Secret not mounted, or incorrect ConfigMap key.",
+        "runtime": "k8s"
+    },
+    {
+        "title": "K8s Liveness Probe Failure",
+        "content": "Context: K8s kills pod because it thinks it's dead. Symptoms: Constant restarts. Action: Check if initialDelaySeconds is too low. Verify if the /health endpoint is blocked by a long-running startup task.",
+        "runtime": "k8s"
+    },
+    {
+        "title": "K8s ImagePullBackOff",
+        "content": "Context: Container runtime cannot fetch image. Action: Verify image name/tag. Check 'imagePullSecrets' for private registries and verify node internet connectivity.",
+        "runtime": "k8s"
+    },
+
+    {
+        "title": "PostgreSQL Connection Pool Exhausted",
+        "content": "Context: Too many active connections. Symptoms: 'remaining connection slots are reserved'. Action: Implement PgBouncer. Check application side for unclosed DB connections in 'finally' blocks.",
+        "runtime": "database"
+    },
+    {
+        "title": "Redis OOM - Maxmemory policy",
+        "content": "Context: Redis reached maxmemory limit. Action: Check 'maxmemory-policy'. Use 'allkeys-lru' for caching. Monitor fragmentation ratio (mem_fragmentation_ratio).",
+        "runtime": "database"
+    },
+    {
+        "title": "Nginx 502 Bad Gateway",
+        "content": "Context: Ingress cannot reach backend pod. Action: Verify if the backend service port matches the pod port. Check if the backend application is actually listening on 0.0.0.0.",
+        "runtime": "network"
+    }
+]
