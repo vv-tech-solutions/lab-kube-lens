@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.analyze.router import router as analyze_router
+from .analyze.router import router as analyze_router
 
 app = FastAPI(title="V&V Tech AIOps Lab")
 

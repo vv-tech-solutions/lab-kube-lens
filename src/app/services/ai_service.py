@@ -1,6 +1,6 @@
 import requests
 from qdrant_client import QdrantClient
-from app.settings import settings
+from ..settings import settings
 
 class AIService:
     def __init__(self):

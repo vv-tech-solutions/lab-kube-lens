@@ -3,8 +3,29 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "portfolio-api"
+name = "kube-lens"
 version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "pydantic",
+    "pydantic_settings",
+    "qdrant_client",
+    "requests",
+    "uvicorn"
+]
+
+[project.optional-dependencies]
+dev = [
+    "deptry",
+    "pytest",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.deptry]
+extend_exclude = ["scripts"]
 
 [tool.fastapi]
 entrypoint = "app.main:app"
