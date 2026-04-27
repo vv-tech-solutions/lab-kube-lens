@@ -1,3 +1,10 @@
+"""
+Server entry point for running the FastAPI application with Uvicorn.
+
+When executed directly, the script launches Uvicorn in reload mode,
+making it convenient for local development.
+"""
+
 import uvicorn
 from .main import app
 

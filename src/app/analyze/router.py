@@ -1,3 +1,5 @@
+"""Analyze endpoints for log processing."""
+
 import json
 import requests
 from fastapi import APIRouter
@@ -7,7 +9,6 @@ from ..services.ai_service import ai_service
 from ..settings import settings
 from ..analyze.models import LogRequest
 
-
 MODEL = "qwen2.5:0.5b"
 
 router = APIRouter(
@@ -16,15 +17,29 @@ router = APIRouter(
 
 @router.post("/")
 async def analyze_log(request: LogRequest, locale: str = "en"):
-    async def generator():
+    """Analyze log content and stream diagnostic results.
 
+    Parameters
+    ----------
+    request : LogRequest
+        Payload containing the log content to analyze.
+    locale : str, optional
+        Language for the LLM response. Defaults to "en".
+
+    Yields
+    ------
+    JSON lines
+        Streaming NDJSON responses with diagnostic stages.
+    """
+    async def generator():
+        # Inform client that search is starting
         yield json.dumps({"status": "searching"}) + "\n"
 
         procedure_obj = ai_service.find_best_procedure(request.content)
 
         if procedure_obj:
             yield json.dumps({
-                "status": "procedure_found", 
+                "status": "procedure_found",
                 "procedure_title": procedure_obj.get("title") if procedure_obj else None,
                 "procedure_content": procedure_obj.get("content") if procedure_obj else None
             }) + "\n"
@@ -58,7 +73,7 @@ async def analyze_log(request: LogRequest, locale: str = "en"):
                 {"role": "user", "content": user_content}
             ],
             "format": "json",
-            "stream": True, 
+            "stream": True,
             "options": {"temperature": 0.1}
         }
 
@@ -73,5 +88,5 @@ async def analyze_log(request: LogRequest, locale: str = "en"):
                 yield json.dumps({"status": "streaming", "chunk": content}) + "\n"
 
         print("Final Response:", fullContent)
-    
+
     return StreamingResponse(generator(), media_type="application/x-ndjson")
