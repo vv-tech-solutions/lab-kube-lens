@@ -3,12 +3,14 @@ stages:
   - test
   - security
 
+variables:
+  REGISTRY_URL: "oci.vvtechsolutions.eu"
+  IMAGE_NAME: "kube-lens"
+
 build_image:
   stage: build
   image: quay.io/buildah/stable:latest
   variables:
-    REGISTRY_URL: "oci.vvtechsolutions.eu"
-    IMAGE_NAME: "kube-lens"
     BUILDAH_ISOLATION: chroot
     STORAGE_DRIVER: overlay
   before_script:
