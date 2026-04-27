@@ -24,7 +24,8 @@ class Settings(BaseSettings):
     qdrant_host: str = Field("localhost", alias="QDRANT_HOST")
     qdrant_port: int = Field(6333, alias="QDRANT_PORT")
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding='utf-8')
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+
 
 # Instantiate the settings for use throughout the project
 settings = Settings()
