@@ -15,7 +15,7 @@ build_image:
         --platform linux/arm64 \
         --tag "$REGISTRY_URL/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA" \
         --tag "$REGISTRY_URL/$IMAGE_NAME:latest" \
-        --cache-from "$REGISTRY_URL/$IMAGE_NAME:latest" \
+        --cache-from "$REGISTRY_URL/$IMAGE_NAME" \
         .
     - buildah push "$REGISTRY_URL/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA"
     - buildah push "$REGISTRY_URL/$IMAGE_NAME:latest"
