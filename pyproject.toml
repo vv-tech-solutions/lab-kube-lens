@@ -21,9 +21,6 @@ dev = [
     "pytest",
 ]
 
-[tool.setuptools.packages.find]
-where = ["src"]
-
 [tool.deptry]
 extend_exclude = ["scripts"]
 
