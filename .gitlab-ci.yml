@@ -5,7 +5,7 @@ build_image:
     REGISTRY_URL: "oci.vvtechsolutions.eu"
     IMAGE_NAME: "kube-lens"
     BUILDAH_ISOLATION: chroot
-    STORAGE_DRIVER: vfs
+    STORAGE_DRIVER: overlay
   before_script:
     - echo "$REGISTRY_PASSWORD" | buildah login -u "$REGISTRY_USER" --password-stdin "$REGISTRY_URL"
   script:
