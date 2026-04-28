@@ -5,7 +5,7 @@ embedding log content, querying the knowledge base, and retrieving the best
 procedure to apply.
 """
 
-import requests
+import httpx
 from qdrant_client import QdrantClient
 
 from ..settings import settings
@@ -49,7 +49,7 @@ class AIService:
             "input": f"{prefix}{technical_hint}{text}",
         }
 
-        res = requests.post(self.ollama_url, json=payload, timeout=10)
+        res = httpx.post(self.ollama_url, json=payload, timeout=10)
         res.raise_for_status()
         return res.json()["embeddings"][0]
 

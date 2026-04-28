@@ -5,9 +5,9 @@ variables from ``.env`` (or the system environment).  The resulting ``settings``
 object is imported by other modules.
 
 Available settings:
-- ``ollama_url`` – base URL for the Ollama API.
-- ``qdrant_host`` – host for the Qdrant vector database.
-- ``qdrant_port`` – port for Qdrant.
+- ``ollama_url`` - base URL for the Ollama API.
+- ``qdrant_host`` - host for the Qdrant vector database.
+- ``qdrant_port`` - port for Qdrant.
 """
 
 from pydantic import Field
@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     """Typed settings container for the application."""
 
     # Base URL for Ollama (default to local dev instance)
-    ollama_url: str = Field("http://localhost:11434/api", env="OLLAMA_URL")
+    ollama_url: str = Field("http://localhost:11434/api", alias="OLLAMA_URL")
 
     # Qdrant connection details
     qdrant_host: str = Field("localhost", alias="QDRANT_HOST")

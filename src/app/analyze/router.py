@@ -2,13 +2,14 @@
 
 import json
 
-import requests
-from fastapi import APIRouter
+import httpx
+from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 
 from ..analyze.models import LogRequest
+from ..dependencies import get_settings
 from ..services.ai_service import ai_service
-from ..settings import settings
+from ..settings import Settings
 
 MODEL = "qwen2.5:0.5b"
 
@@ -18,7 +19,9 @@ router = APIRouter(
 
 
 @router.post("/")
-async def analyze_log(request: LogRequest, locale: str = "en"):
+async def analyze_log(
+    request: LogRequest, locale: str = "en", settings: Settings = Depends(get_settings)
+):
     """Analyze log content and stream diagnostic results.
 
     Parameters
@@ -93,18 +96,20 @@ async def analyze_log(request: LogRequest, locale: str = "en"):
             "options": {"temperature": 0.1},
         }
 
-        response = requests.post(
-            f"{settings.ollama_url}/chat", json=payload, stream=True
-        )
+        client = httpx.AsyncClient()
+        async with client.stream(
+            "POST",
+            f"{settings.ollama_url}/chat",
+            json=payload,
+        ) as response:
+            fullContent = ""
+            async for line in response.aiter_lines():
+                if line:
+                    chunk = json.loads(line)
+                    content = chunk.get("message", {}).get("content", "")
+                    fullContent += content
+                    yield json.dumps({"status": "streaming", "chunk": content}) + "\n"
 
-        fullContent = ""
-        for line in response.iter_lines():
-            if line:
-                chunk = json.loads(line)
-                content = chunk.get("message", {}).get("content", "")
-                fullContent += content
-                yield json.dumps({"status": "streaming", "chunk": content}) + "\n"
-
-        print("Final Response:", fullContent)
+            print("Final Response:", fullContent)
 
     return StreamingResponse(generator(), media_type="application/x-ndjson")
