@@ -98,9 +98,7 @@ async def analyze_log(
 
         client = httpx.AsyncClient()
         async with client.stream(
-            "POST",
-            f"{settings.ollama_url}/chat",
-            json=payload,
+            "POST", f"{settings.ollama_url}/chat", json=payload, timeout=60.0
         ) as response:
             fullContent = ""
             async for line in response.aiter_lines():
